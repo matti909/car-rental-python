@@ -1,0 +1,10 @@
+/client
+
+backend/venv/
+backend/__pycache__/
+
+.vscode
+.env
+
+node_modules/
+.next
