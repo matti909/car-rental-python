@@ -21,7 +21,9 @@ middleware = [
 ]
 
 from motor.motor_asyncio import AsyncIOMotorClient
+
 from routers.cars import router as cars_router
+from routers.users import router as users_router
 
 
 DB_URL = config("DB_URL", cast=str)
@@ -34,6 +36,7 @@ origins = [
 app = FastAPI(middleware=middleware)
 
 app.include_router(cars_router, prefix="/cars", tags=["cars"])
+app.include_router(users_router, prefix="/users", tags=["users"])
 
 
 @app.on_event("startup")
