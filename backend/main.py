@@ -1,13 +1,10 @@
 from decouple import config
-
-import uvicorn
-
-from decouple import config
-
 from fastapi import FastAPI
-
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
+from colorama import Fore
+
+import uvicorn
 
 
 middleware = [
@@ -46,9 +43,11 @@ async def startup_db_client():
         DB_NAME = config("DB_NAME", cast=str)
         app.mongodb_client = AsyncIOMotorClient(DB_URL)
         app.mongodb = app.mongodb_client[DB_NAME]
-        print("Conectado a MongoDB Atlas")
+        print(
+            Fore.GREEN + "INFO" + Fore.RESET + ":     ***Conectado a MongoDB Atlas***"
+        )
     except Exception as e:
-        print("Error al conectar a MongoDB Atlas:", str(e))
+        print("ERROR: Error al conectar a MongoDB Atlas:", str(e))
 
 
 @app.on_event("shutdown")

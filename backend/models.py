@@ -74,10 +74,11 @@ class CarBase(MongoBaseModel):
     price: int = Field(...)
     km: int = Field(...)
     cm3: int = Field(...)
+    picture: Optional[str] = None
 
 
 class CarDB(CarBase):
-    owner: str = Field(...)
+    owner: Optional[str] = Field(None)
 
 
 class CarUpdate(MongoBaseModel):
