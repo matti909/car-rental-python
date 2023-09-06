@@ -65,9 +65,17 @@ async def login(request: Request, loginUser: LoginBase = Body(...)) -> str:
     ):
         raise HTTPException(status_code=401, detail="Invalid email and/or password")
     token = auth_handler.encode_token(user["_id"])
-    response = JSONResponse(content={"token": token})
 
-    return response
+    # Crea un diccionario con la información del usuario y el token
+    user_info = {
+        "username": user["username"],
+        "email": user["email"],
+        "role": user["role"],
+        "jwt": token,
+    }
+
+    # Devuelve la información del usuario y el token como respuesta JSON
+    return JSONResponse(content=user_info)
 
 
 # me route
