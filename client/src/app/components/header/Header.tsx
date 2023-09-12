@@ -3,7 +3,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-    <div className=" text-orange-600 p-2 font-bold flex flex-row justify-between items-center">
+    <nav className=" text-orange-600 p-2 font-bold flex flex-row justify-between items-center">
       <div>
         <Link href="/">FARM Cars</Link>
       </div>
@@ -21,7 +21,7 @@ const Header = () => {
           <Link href="/account/login">Login</Link>
         </li>
       </ul>
-    </div>
+    </nav>
   )
 }
 

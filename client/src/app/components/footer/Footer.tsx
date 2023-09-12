@@ -1,4 +1,4 @@
 const Footer = () => {
-  return <div className="bg-slate-700">Footer</div>
+  return <footer className="bg-slate-700">Footer</footer>
 }
 export default Footer

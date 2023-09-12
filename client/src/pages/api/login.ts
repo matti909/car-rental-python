@@ -1,6 +1,9 @@
 import cookie from 'cookie'
 import type { NextApiResponse } from 'next'
 import type { NextRequest } from 'next/server'
+import { SignJWT } from 'jose'
+import { getJwtSecretKey } from '../../lib/auth'
+import { nanoid } from '@reduxjs/toolkit'
 
 export default async (req: NextRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
@@ -22,25 +25,30 @@ export default async (req: NextRequest, res: NextApiResponse) => {
       const data = await result.json()
 
       if (result.ok) {
-        const jwt = data.token
+        const jwt = await new SignJWT({})
+          .setProtectedHeader({ alg: 'HS256' })
+          .setJti(nanoid())
+          .setIssuedAt()
+          .setExpirationTime('10000m')
+          .sign(new TextEncoder().encode(getJwtSecretKey()))
 
         // Configura una cookie con el token JWT
         res
           .status(200)
           .setHeader(
             'Set-Cookie',
-            cookie.serialize('jwt', jwt, {
+            cookie.serialize('user-token', jwt, {
               path: '/',
               httpOnly: true,
               sameSite: 'strict',
-              maxAge: 30, // Define la duración de la cookie en segundos
             })
           )
           .json(data)
+        console.log(data)
       } else {
         // En caso de error en la respuesta de la API
-        data.error = data.detail
-        res.status(401).json(data)
+
+        res.status(401).json('Invalid Credentials')
       }
     } catch (error) {
       // Maneja errores de conexión o excepciones inesperadas

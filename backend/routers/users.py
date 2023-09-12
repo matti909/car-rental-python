@@ -6,6 +6,8 @@ from models import UserBase, LoginBase, CurrentUser
 
 from authentication import AuthHandler
 
+import re
+
 router = APIRouter()
 
 # instantiate the Auth Handler
@@ -17,6 +19,18 @@ auth_handler = AuthHandler()
 
 @router.post("/register", response_description="Register user")
 async def register(request: Request, newUser: UserBase = Body(...)) -> UserBase:
+    # Verifica que el correo electrónico tenga un formato válido
+    if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", newUser.email):
+        raise HTTPException(status_code=400, detail="Invalid email address")
+
+    # Verifica que la contraseña cumpla con los requisitos
+    if not (6 <= len(newUser.password) <= 16) or not re.match(
+        "^[a-zA-Z0-9]+$", newUser.password
+    ):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Password must be alphanumeric and between 6 and 16 characters",
+        )
     # hash the password before inserting it into MongoDB
     newUser.password = auth_handler.get_password_hash(newUser.password)
 
@@ -66,16 +80,11 @@ async def login(request: Request, loginUser: LoginBase = Body(...)) -> str:
         raise HTTPException(status_code=401, detail="Invalid email and/or password")
     token = auth_handler.encode_token(user["_id"])
 
-    # Crea un diccionario con la información del usuario y el token
-    user_info = {
-        "username": user["username"],
-        "email": user["email"],
-        "role": user["role"],
-        "jwt": token,
-    }
+    response = JSONResponse(
+        content={"token": token, "user": CurrentUser(**user).dict()}
+    )
 
-    # Devuelve la información del usuario y el token como respuesta JSON
-    return JSONResponse(content=user_info)
+    return response
 
 
 # me route
