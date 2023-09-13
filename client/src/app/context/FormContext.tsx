@@ -1,18 +1,22 @@
-// useForm.tsx
-import React, { createContext, useContext, useRef, useState } from 'react'
+'use client'
+import React, { createContext, useRef, useState } from 'react'
 
 interface FormContextProps {
-  register: (name: string) => {
-    ref: React.RefObject<HTMLInputElement>
-    onBlur: () => void
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    name: string
+  state: {
+    values: Record<string, string>
+    errors: Record<string, string>
   }
-  handleSubmit: (e: React.FormEvent) => void
-  getValues: () => Record<string, string>
-  values: Record<string, string>
-  errors: Record<string, string>
-  hasError: (name: string) => boolean
+  actions: {
+    register: (name: string) => {
+      ref: React.RefObject<HTMLInputElement>
+      onBlur: () => void
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+      name: string
+    }
+    handleSubmit: (e: React.FormEvent) => void
+    getValues: () => Record<string, string>
+    hasError: (name: string) => boolean
+  }
 }
 
 interface Props {
@@ -28,10 +32,6 @@ export const FormAppProvider = ({ children }: Props) => {
   const register = (name: string) => {
     const ref = useRef<HTMLInputElement>(null)
 
-    const onBlur = () => {
-      // Optional: You can add onBlur logic here
-    }
-
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValues(prevValues => ({
         ...prevValues,
@@ -40,6 +40,9 @@ export const FormAppProvider = ({ children }: Props) => {
     }
 
     return { ref, onBlur, onChange, name }
+  }
+  const onBlur = () => {
+    // Optional: You can add onBlur logic here
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -53,10 +56,21 @@ export const FormAppProvider = ({ children }: Props) => {
   const hasError = (name: string) => !!errors[name]
 
   return (
-    <FormContext.Provider
-      value={{ register, handleSubmit, getValues, values, errors, hasError }}
+    <FormStateContext.Provider
+      value={{
+        state: {
+          values,
+          errors,
+        },
+        actions: {
+          register,
+          handleSubmit,
+          getValues,
+          hasError,
+        },
+      }}
     >
       {children}
-    </FormContext.Provider>
+    </FormStateContext.Provider>
   )
 }
