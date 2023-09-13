@@ -6,5 +6,5 @@ export interface RestAPIResponse {
 export interface User {
   email: string
   username: string
-  role: string
+  role: 'ADMIN' | 'SALESPERSON'
 }

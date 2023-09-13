@@ -30,6 +30,7 @@ export default async (req: NextRequest, res: NextApiResponse) => {
           .setJti(nanoid())
           .setIssuedAt()
           .setExpirationTime('10000m')
+          .setSubject(data.user.role)
           .sign(new TextEncoder().encode(getJwtSecretKey()))
 
         // Configura una cookie con el token JWT

@@ -3,6 +3,7 @@
 import axios, { AxiosError } from 'axios'
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import type { RestAPIResponse } from '../../interfaces/api.interface'
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 const Login = () => {
@@ -27,6 +28,8 @@ const Login = () => {
         email: sigin.email,
         password: sigin.password,
       })
+      const data = res.data as RestAPIResponse
+      if (data.user.role === 'ADMIN') router.push('/dashboard')
       if (res.status === 200) router.push('/cars')
       console.log(res)
     } catch (error) {

@@ -4,6 +4,7 @@ interface UserJwtPayload {
   jti: string
   iat: number
   exp: number
+  sub: string
 }
 
 export const getJwtSecretKey = () => {
@@ -12,6 +13,7 @@ export const getJwtSecretKey = () => {
   if (!secret || secret.length === 0) {
     throw new Error('The enviroment variable JWT_SECRET_KEY is not set')
   }
+  return secret
 }
 
 export const verifyAuth = async (token: string) => {

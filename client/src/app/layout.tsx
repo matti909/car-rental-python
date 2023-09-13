@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Header from '../app/components/header/Header'
 import Footer from '../app/components/footer/Footer'
-import SessionAuthProvider from '../context/SessionAuthProvider'
+import { FormAppProvider } from './context/FormContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,7 +24,7 @@ export default function RootLayout({
           <main className="grid grid-rows-[60px,1fr,60px] min-h-screen ">
             <Header />
             <section className="flex-1">
-              <SessionAuthProvider>{children}</SessionAuthProvider>
+              <FormAppProvider>{children}</FormAppProvider>
             </section>
             <Footer />
           </main>
