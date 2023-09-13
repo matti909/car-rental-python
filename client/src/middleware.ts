@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { verifyAuth } from './lib/auth'
-import { includes } from 'lodash'
 
 const isUserRoute = (pathname: string) => {
   return pathname.startsWith('/dashboard')
@@ -9,18 +8,12 @@ const isUserRoute = (pathname: string) => {
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('user-token')?.value
   const role = req.headers.get('authorization')
-  const { pathname } = req.nextUrl
-  console.log(role)
 
   const verifyToken =
     token &&
     (await verifyAuth(token).catch(err => {
       console.log(err)
     }))
-
-  if (isUserRoute(pathname) && includes(['user', 'ADMIN'], role)) {
-    return NextResponse.redirect(new URL('/account/login', req.url))
-  }
 
   if (req.nextUrl.pathname.startsWith('/account/login') && !verifyToken) {
     return
@@ -33,8 +26,18 @@ export async function middleware(req: NextRequest) {
   if (!verifyToken) {
     return NextResponse.redirect(new URL('/account/login', req.url))
   }
+
+  // Verifica si el role es "ADMIN" para acceder a /dashboard
+  if (isUserRoute(req.nextUrl.pathname) && role !== 'ADMIN') {
+    return NextResponse.redirect(new URL('/unauthorized', req.url))
+  }
+
+  // Proteger /cars para usuarios con token válido
+  if (req.nextUrl.pathname.startsWith('/cars') && !verifyToken) {
+    return NextResponse.redirect(new URL('/account/login', req.url))
+  }
 }
 
 export const config = {
-  matcher: ['/dashboard'],
+  matcher: ['/dashboard', '/cars'], // Agrega '/cars' a las rutas protegidas
 }
