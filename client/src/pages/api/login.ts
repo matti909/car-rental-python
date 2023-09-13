@@ -45,7 +45,6 @@ export default async (req: NextRequest, res: NextApiResponse) => {
             })
           )
           .json(data)
-        console.log(data)
       } else {
         // En caso de error en la respuesta de la API
 

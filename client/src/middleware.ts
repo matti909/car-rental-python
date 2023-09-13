@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { verifyAuth } from './lib/auth'
+import { decodeJwt } from 'jose'
 
 const isUserRoute = (pathname: string) => {
   return pathname.startsWith('/dashboard')
@@ -7,7 +8,7 @@ const isUserRoute = (pathname: string) => {
 
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('user-token')?.value
-  const role = req.headers.get('authorization')
+  const role = decodeJwt(token!)?.sub
 
   const verifyToken =
     token &&
