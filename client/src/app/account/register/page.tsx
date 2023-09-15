@@ -3,8 +3,8 @@
 import React from 'react'
 
 import axios, { AxiosError } from 'axios'
-import type { FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
+import type { FormEvent } from 'react'
 
 const register = () => {
   const [error, setError] = React.useState('')
@@ -38,6 +38,12 @@ const register = () => {
       <h1>Register </h1>
       <form onSubmit={handleSubmit}>
         <input
+          type="email"
+          placeholder="e-mail"
+          name="email"
+          className="bg-zinc-600 px-4 py-4 block mb-2"
+        />
+        <input
           type="text"
           placeholder="username"
           name="username"
@@ -47,12 +53,6 @@ const register = () => {
           type="password"
           placeholder="password"
           name="password"
-          className="bg-zinc-600 px-4 py-4 block mb-2"
-        />
-        <input
-          type="email"
-          placeholder="e-mail"
-          name="email"
           className="bg-zinc-600 px-4 py-4 block mb-2"
         />
 

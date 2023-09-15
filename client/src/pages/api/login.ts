@@ -15,11 +15,14 @@ export default async (req: NextRequest, res: NextApiResponse) => {
       }
 
       // Realiza una solicitud a la API de autenticación
-      const result = await fetch('http://127.0.0.1:8000/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
+      const result = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/login`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        }
+      )
 
       // Analiza la respuesta JSON de la API
       const data = await result.json()
@@ -47,8 +50,8 @@ export default async (req: NextRequest, res: NextApiResponse) => {
           .json(data)
       } else {
         // En caso de error en la respuesta de la API
-
-        res.status(401).json('Invalid Credentials')
+        data.error = data.detail
+        res.status(401).json(data)
       }
     } catch (error) {
       // Maneja errores de conexión o excepciones inesperadas

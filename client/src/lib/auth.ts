@@ -18,6 +18,10 @@ export const getJwtSecretKey = () => {
 
 export const verifyAuth = async (token: string) => {
   try {
+    if (!token) {
+      throw new Error('Token is null or undefined')
+    }
+
     const verified = await jwtVerify(
       token,
       new TextEncoder().encode(getJwtSecretKey())

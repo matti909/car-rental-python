@@ -1,9 +1,10 @@
-import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Header from '../app/components/header/Header'
 import Footer from '../app/components/footer/Footer'
+import Header from '../app/components/header/Header'
+import Providers from '../redux/provider'
 import { FormAppProvider } from './context/FormContext'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <>
+      <Providers>
         <body className={inter.className}>
           <main className="grid grid-rows-[60px,1fr,60px] min-h-screen ">
             <Header />
@@ -29,7 +30,7 @@ export default function RootLayout({
             <Footer />
           </main>
         </body>
-      </>
+      </Providers>
     </html>
   )
 }
