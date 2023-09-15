@@ -4,6 +4,7 @@ specifiers:
   '@reduxjs/toolkit': ^1.9.5
   '@types/cookie': ^0.5.1
   '@types/jsonwebtoken': ^9.0.2
+  '@types/luxon': ^3.3.2
   '@types/node': 20.5.3
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
@@ -24,12 +25,15 @@ specifiers:
   eslint-plugin-react: ^7.33.2
   jose: ^4.14.6
   jsonwebtoken: ^9.0.2
+  jwt-decode: ^3.1.2
+  luxon: ^3.4.3
   nanoid: ^4.0.2
   next: 13.4.19
   postcss: 8.4.28
   prettier: ^3.0.2
   query: link:@reduxjs/toolkit/query
   react: 18.2.0
+  react-cookie: ^6.1.1
   react-dom: 18.2.0
   react-query: ^3.39.3
   react-redux: ^8.1.2
@@ -38,6 +42,7 @@ specifiers:
 
 dependencies:
   '@reduxjs/toolkit': 1.9.5_nnem43rer6rxr5uhc4j6bxdlmm
+  '@types/luxon': 3.3.2
   '@types/node': 20.5.3
   '@types/react': 18.2.21
   '@types/react-dom': 18.2.7
@@ -48,11 +53,14 @@ dependencies:
   cookies-next: 4.0.0
   eslint-config-next: 13.4.19_qj3u6ezxe2airdzjq3nyoxe24m
   jsonwebtoken: 9.0.2
+  jwt-decode: 3.1.2
+  luxon: 3.4.3
   nanoid: 4.0.2
   next: 13.4.19_biqbaboplfbrettd7655fr4n2y
   postcss: 8.4.28
   query: link:@reduxjs/toolkit/query
   react: 18.2.0
+  react-cookie: 6.1.1_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-query: 3.39.3_biqbaboplfbrettd7655fr4n2y
   react-redux: 8.1.2_zkisbtryv3xtasf42ecsrjh3ky
@@ -328,7 +336,6 @@ packages:
 
   /@types/cookie/0.5.2:
     resolution: {integrity: sha512-DBpRoJGKJZn7RY92dPrgoMew8xCWc2P71beqsjyhEI/Ds9mOyVmBwtekyfhpwFIVt1WrxTonFifiOZ62V8CnNA==}
-    dev: true
 
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
@@ -349,6 +356,10 @@ packages:
     dependencies:
       '@types/node': 20.5.3
     dev: true
+
+  /@types/luxon/3.3.2:
+    resolution: {integrity: sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==}
+    dev: false
 
   /@types/node/16.18.50:
     resolution: {integrity: sha512-OiDU5xRgYTJ203v4cprTs0RwOCd5c5Zjv+K5P8KSqfiCsB1W3LcamTUMcnQarpq5kOYbhHfSOgIEJvdPyb5xyw==}
@@ -2127,6 +2138,10 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
+
   /keyv/4.5.3:
     resolution: {integrity: sha512-QCiSav9WaX1PgETJ+SpNnx2PRRapJ/oRSXM4VO5OGYGSjrxbKPVFVhB3l2OCbLCk329N8qyAtsJjSjvVBWzEug==}
     dependencies:
@@ -2206,6 +2221,11 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+
+  /luxon/3.4.3:
+    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
+    engines: {node: '>=12'}
+    dev: false
 
   /match-sorter/6.3.1:
     resolution: {integrity: sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==}
@@ -2645,6 +2665,17 @@ packages:
 
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  /react-cookie/6.1.1_react@18.2.0:
+    resolution: {integrity: sha512-fuFRpf8LH6SfmVMowDUIRywJF5jAUDUWrm0EI5VdXfTl5bPcJ7B0zWbuYpT0Tvikx7Gs18MlvAT+P+744dUz2g==}
+    peerDependencies:
+      react: '>= 16.3.0'
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.1
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      universal-cookie: 6.1.1
+    dev: false
 
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
@@ -3155,6 +3186,13 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+
+  /universal-cookie/6.1.1:
+    resolution: {integrity: sha512-33S9x3CpdUnnjwTNs2Fgc41WGve2tdLtvaK2kPSbZRc5pGpz2vQFbRWMxlATsxNNe/Cy8SzmnmbuBM85jpZPtA==}
+    dependencies:
+      '@types/cookie': 0.5.2
+      cookie: 0.5.0
+    dev: false
 
   /unload/2.2.0:
     resolution: {integrity: sha512-B60uB5TNBLtN6/LsgAf3udH9saB5p7gqJwcFfbOEZ8BcBHnGwCf6G/TGiEqkRAxX7zAFIUtzdrXQSdL3Q/wqNA==}

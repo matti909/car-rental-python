@@ -5,10 +5,7 @@ import type { RestAPIResponse } from '../../app/interfaces/api.interface'
 // Crear una función asincrónica para realizar la solicitud
 export const authThunk = createAsyncThunk(
   'users/me',
-  async (
-    { email, password }: { email: string; password: string },
-    { rejectWithValue }
-  ) => {
+  async ({ email, password }: { email: string; password: string }) => {
     try {
       const res = await axios.post('/api/login', {
         email,
@@ -21,7 +18,7 @@ export const authThunk = createAsyncThunk(
         user,
       }
     } catch (error) {
-      return rejectWithValue(error)
+      throw new Error(error.response?.data?.detail)
     }
   }
 )

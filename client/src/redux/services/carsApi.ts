@@ -9,7 +9,7 @@ const api = createApi({
   }),
   endpoints: builder => ({
     getCars: builder.query<Cars[], null>({
-      query: () => 'cars',
+      query: () => 'cars/',
     }),
   }),
 })

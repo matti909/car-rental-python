@@ -11,8 +11,9 @@ export const getJwtSecretKey = () => {
   const secret = process.env.JWT_SECRET_KEY
 
   if (!secret || secret.length === 0) {
-    throw new Error('The enviroment variable JWT_SECRET_KEY is not set')
+    throw new Error('The environment variable JWT_SECRET_KEY is not set')
   }
+
   return secret
 }
 

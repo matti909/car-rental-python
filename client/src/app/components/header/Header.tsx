@@ -1,12 +1,10 @@
 'use client'
 import Link from 'next/link'
 import { useAppSelector } from '../../../redux/hook'
-import { useGetUsersQuery } from '../../../redux/services/userApi'
+// import { useGetUsersQuery } from '../../../redux/services/userApi'
 
 const Header = () => {
-  const { loading } = useAppSelector(state => state.auth)
-  const { data: user } = useGetUsersQuery()
-  console.log(user)
+  const { loading, userData: user } = useAppSelector(state => state.auth)
 
   return (
     <div className=" text-orange-600 py-2 font-bold flex flex-row justify-between items-center">
@@ -47,7 +45,9 @@ const Header = () => {
         ) : (
           <>
             <li>
-              <Link href="/account/logout">Log out {user.username}</Link>
+              <Link href="/account/logout">
+                <p>Log out {user.username}</p>
+              </Link>
             </li>
           </>
         )}

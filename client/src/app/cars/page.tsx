@@ -3,7 +3,7 @@ import React from 'react'
 import { useGetCarsQuery } from '../../redux/services/carsApi'
 
 const cars = () => {
-  const { data, isLoading, error, isFetching } = useGetCarsQuery()
+  const { data, isLoading, error, isFetching } = useGetCarsQuery(null)
 
   if (isLoading) return <div>Cargando...</div>
 
@@ -22,7 +22,7 @@ const cars = () => {
           }}
         >
           {data?.map(car => (
-            <div key={car.id}>
+            <div key={car._id}>
               <h3>{car.brand}</h3>
               <p>make: {car.make}</p>
               <p>Price: {car.price}</p>
