@@ -130,10 +130,10 @@ async def update_task(
     userId=Depends(auth_handler.auth_wrapper),
 ):
     # check if the user trying to modify is an admin:
-    user = await mongodb.db["users"].find_one({"_id": userId})
+    user = await mongodb.db["users"].find_one({"_id": ObjectId(id)})
 
     # check if the car is owned by the user trying to modify it
-    findCar = await mongodb.db["cars"].find_one({"_id": id})
+    findCar = await mongodb.db["cars"].find_one({"_id": ObjectId(id)})
 
     if (findCar["owner"] != userId) and user["role"] != "ADMIN":
         raise HTTPException(
@@ -151,18 +151,16 @@ async def update_task(
 
 
 @router.delete("/{id}", response_description="Delete car")
-async def delete_task(
-    id: str, request: Request, userId=Depends(auth_handler.auth_wrapper)
-):
+async def delete_task(id: str, userId=Depends(auth_handler.auth_wrapper)):
     # check if the car is owned by the user trying to delete it
     try:
-        findCar = await request.app.mongodb["cars"].find_one({"_id": id})
+        findCar = await mongodb.db["cars"].find_one({"_id": id})
         if findCar["owner"] != userId:
             raise HTTPException(
                 status_code=401, detail="Only the owner can delete the car"
             )
 
-        delete_result = await request.app.mongodb["cars"].delete_one({"_id": id})
+        delete_result = await mongodb.db["cars"].delete_one({"_id": id})
 
         if delete_result.deleted_count == 1:
             return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content={})
