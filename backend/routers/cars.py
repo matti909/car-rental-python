@@ -17,9 +17,9 @@ import cloudinary
 import cloudinary.uploader
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from authentication import AuthHandler
-from database import mongodb
-from models import CarBase, CarDB, CarUpdate
+from app.authentication import AuthHandler
+from app.database import mongodb
+from app.models import CarBase, CarDB, CarUpdate
 from decouple import config
 
 from PIL import Image, ImageOps

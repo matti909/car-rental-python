@@ -2,10 +2,10 @@ from fastapi import APIRouter, Request, Body, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from models import UserBase, LoginBase, CurrentUser
+from app.models import UserBase, LoginBase, CurrentUser
 
-from authentication import AuthHandler
-from database import mongodb
+from app.authentication import AuthHandler
+from app.database import mongodb
 import re
 
 router = APIRouter()

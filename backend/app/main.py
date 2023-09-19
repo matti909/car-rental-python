@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from colorama import Fore
-from database import mongodb
+from app.database import mongodb
 from routers.cars import router as cars_router
 from routers.users import router as users_router
 

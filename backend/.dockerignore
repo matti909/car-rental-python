@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Virtual Environment
+venv/
+env/
+
+# Logs
+*.log
+
+# Compiled files
+*.pyc
+*.pyo
+__pycache__/
