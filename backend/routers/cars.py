@@ -1,4 +1,5 @@
-from typing import Tuple, List, Optional
+from typing import List, Optional
+from bson import ObjectId
 
 from fastapi import (
     APIRouter,
@@ -10,12 +11,14 @@ from fastapi import (
     HTTPException,
     Depends,
     Form,
+    Path,
 )
 import cloudinary
 import cloudinary.uploader
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from authentication import AuthHandler
+from database import mongodb
 from models import CarBase, CarDB, CarUpdate
 from decouple import config
 
@@ -40,22 +43,14 @@ auth_handler = AuthHandler()
 
 @router.get("/", response_description="List all cars")
 async def list_all_cars(
-    request: Request,
     owner: Optional[str] = None,
-    min_price: int = 0,
-    max_price: int = 100000,
-    brand: Optional[str] = None,
     page: int = 1,
 ) -> List[CarDB]:
     RESULTS_PER_PAGE = 25
     skip = (page - 1) * RESULTS_PER_PAGE
 
     full_query = (
-        request.app.mongodb["cars"]
-        .find()
-        .sort("_id", -1)
-        .skip(skip)
-        .limit(RESULTS_PER_PAGE)
+        mongodb.collection.find().sort("_id", -1).skip(skip).limit(RESULTS_PER_PAGE)
     )
 
     results = [CarDB(owner=owner, **raw_car) async for raw_car in full_query]
@@ -63,10 +58,25 @@ async def list_all_cars(
     return results
 
 
+# get car by ID
+@router.get(
+    "/{id}", response_model=CarDB, response_description="Get a single car by ID"
+)
+async def show_car(id: str = Path(..., title="The ID of the car to get")):
+    car = await mongodb.collection.find_one({"_id": ObjectId(id)})
+
+    if car:
+        return CarDB(**car)
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Car with ID {id} not found"
+    )
+
+
 # create new car with FORM DATA
-@router.post("/", response_description="Add new car with picture")
+@router.post(
+    "/", response_description="Add new car with picture", response_model=CarBase
+)
 async def create_car_form(
-    request: Request,
     brand: str = Form("brand"),
     make: str = Form("make"),
     year: int = Form("year"),
@@ -107,9 +117,55 @@ async def create_car_form(
 
     car = jsonable_encoder(car)
 
-    new_car = await request.app.mongodb["cars"].insert_one(car)
-    created_car = await request.app.mongodb["cars"].find_one(
-        {"_id": new_car.inserted_id}
-    )
+    new_car = await mongodb.db["cars"].insert_one(car)
+    created_car = await mongodb.db["cars"].find_one({"_id": new_car.inserted_id})
 
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_car)
+
+
+@router.patch("/{id}", response_description="Update car")
+async def update_task(
+    id: str,
+    car: CarUpdate = Body(...),
+    userId=Depends(auth_handler.auth_wrapper),
+):
+    # check if the user trying to modify is an admin:
+    user = await mongodb.db["users"].find_one({"_id": userId})
+
+    # check if the car is owned by the user trying to modify it
+    findCar = await mongodb.db["cars"].find_one({"_id": id})
+
+    if (findCar["owner"] != userId) and user["role"] != "ADMIN":
+        raise HTTPException(
+            status_code=401, detail="Only the owner or an admin can update the car"
+        )
+
+    await mongodb.db["cars"].update_one(
+        {"_id": id}, {"$set": car.dict(exclude_unset=True)}
+    )
+
+    if (car := await mongodb.db["cars"].find_one({"_id": id})) is not None:
+        return CarDB(**car)  # type: ignore
+
+    raise HTTPException(status_code=404, detail=f"Car with {id} not found")
+
+
+@router.delete("/{id}", response_description="Delete car")
+async def delete_task(
+    id: str, request: Request, userId=Depends(auth_handler.auth_wrapper)
+):
+    # check if the car is owned by the user trying to delete it
+    try:
+        findCar = await request.app.mongodb["cars"].find_one({"_id": id})
+        if findCar["owner"] != userId:
+            raise HTTPException(
+                status_code=401, detail="Only the owner can delete the car"
+            )
+
+        delete_result = await request.app.mongodb["cars"].delete_one({"_id": id})
+
+        if delete_result.deleted_count == 1:
+            return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content={})
+
+    except TypeError:
+        raise HTTPException(status_code=404, detail=f"Car with {id} not found")

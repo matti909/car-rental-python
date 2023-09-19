@@ -8,31 +8,29 @@ from typing import Optional
 
 class PyObjectId(ObjectId):
     @classmethod
-    def __pydantic_post_root_validators__(
-        cls: Type["PyObjectId"], model: "PyObjectId", values: dict
-    ) -> dict:
-        # Implementamos nuestra función de validación en el método __pydantic_post_root_validators__
-        v = values.get("id")
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
-        return values
-
-    @classmethod
     def __get_validators__(cls):
-        # Podemos mantener esta función para seguir utilizando la validación de PyObjectId
+        # Creamos un generador que devuelve la función de validación
         yield cls.validate
 
     @classmethod
     def validate(cls, v):
+        # Validamos que el valor 'v' sea un ObjectId válido
         if not ObjectId.is_valid(v):
             raise ValueError("Invalid objectid")
-        return cls(v)
+        # Si es válido, devolvemos el ObjectId
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
 
 
 class MongoBaseModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
 
     class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
         json_encoders = {ObjectId: str}
 
 
@@ -43,7 +41,7 @@ class Role(str, Enum):
 
 class UserBase(MongoBaseModel):
     username: str = Field(..., min_length=3, max_length=15)
-    email: str = Field(...)
+    email: EmailStr
     password: str = Field(...)
     role: Role
 
@@ -54,6 +52,9 @@ class UserBase(MongoBaseModel):
             return email
         except EmailNotValidError as e:
             raise EmailNotValidError
+
+    def __getitem__(self, key):
+        return getattr(self, key)
 
 
 class LoginBase(BaseModel):
