@@ -4,7 +4,7 @@ import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useAppDispatch } from '../../../redux/hook'
-import { login } from '../../../redux/slices/authSlice'
+import { login, setUser } from '../../../redux/slices/authSlice'
 
 const Login = () => {
   const [error, setError] = React.useState('')
@@ -19,11 +19,10 @@ const Login = () => {
         email: formData.get('email'),
         password: formData.get('password'),
       })
-      console.log(res)
       router.push('/cars')
       dispatch(login({ accessToken: res.data.token }))
+      dispatch(setUser({ userData: res.data.user }))
     } catch (error) {
-      console.log(error)
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data.detail
         setError(errorMessage)
