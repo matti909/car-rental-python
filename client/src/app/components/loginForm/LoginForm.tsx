@@ -1,28 +1,30 @@
 'use client'
 
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import { useFormContext } from '../../hooks/useForm'
-import { useAppDispatch, useAppSelector } from '../../../redux/hook'
-import { authThunk } from '../../../redux/thunk/auth.thunk'
 
 const Login = () => {
-  const { actions } = useFormContext()
-  const { register, getValues } = actions
+  const [error, setError] = React.useState('')
   const router = useRouter()
-  const dispatch = useAppDispatch()
-  const { error } = useAppSelector(state => state.auth)
-
-  const values = getValues()
-  const { email, password } = values
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    const res = await dispatch(authThunk({ email, password }))
-    console.log(res)
-    router.push('/cars')
+    try {
+      const formData = new FormData(e.currentTarget)
+      const res = await axios.post('/api/login', {
+        email: formData.get('email'),
+        password: formData.get('password'),
+      })
+      console.log(res)
+      router.push('/login')
+    } catch (error) {
+      console.log(error)
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data.detail
+        setError(errorMessage)
+      }
+    }
   }
 
   return (
@@ -40,20 +42,20 @@ const Login = () => {
             <span className="text-gray-700">Email</span>
             <input
               type="email"
+              name="email"
               className="mt-1 block w-full"
               placeholder="your email"
               required
-              {...register('email')}
             />
           </label>
           <label className="block">
             <span className="text-gray-700">Password</span>
             <input
               type="password"
+              name="password"
               placeholder="your password"
               required
               className="mt-1 block w-full"
-              {...register('password')}
             />
           </label>
           <button type="submit" className="py-4 px-4 :hover bg-gray-200">

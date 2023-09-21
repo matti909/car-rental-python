@@ -56,7 +56,7 @@ async def register(newUser: UserBase = Body(...)) -> UserBase:
 # post user
 @router.post("/login", response_description="Login user")
 async def login(request: Request, loginUser: LoginBase = Body(...)) -> JSONResponse:
-    user = await request.app.mongodb["users"].find_one({"email": loginUser.email})
+    user = await mongodb.db["users"].find_one({"email": loginUser.email})
 
     if (user is None) or (
         not auth_handler.verify_password(loginUser.password, user["password"])
