@@ -1,10 +1,12 @@
 'use client'
 import Link from 'next/link'
 import { useAppSelector } from '../../../redux/hook'
-// import { useGetUsersQuery } from '../../../redux/services/userApi'
+import { useGetuserQuery } from '../../../redux/services/users.api'
 
 const Header = () => {
   const { loading, userData: user } = useAppSelector(state => state.auth)
+  const { data, status } = useGetuserQuery(null)
+  console.log(data, status)
 
   return (
     <div className=" text-orange-600 py-2 font-bold flex flex-row justify-between items-center">

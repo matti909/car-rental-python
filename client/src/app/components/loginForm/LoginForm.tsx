@@ -3,10 +3,13 @@
 import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { useAppDispatch } from '../../../redux/hook'
+import { login } from '../../../redux/slices/authSlice'
 
 const Login = () => {
   const [error, setError] = React.useState('')
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -17,7 +20,8 @@ const Login = () => {
         password: formData.get('password'),
       })
       console.log(res)
-      router.push('/login')
+      router.push('/cars')
+      dispatch(login({ accessToken: res.data.token }))
     } catch (error) {
       console.log(error)
       if (error instanceof AxiosError) {

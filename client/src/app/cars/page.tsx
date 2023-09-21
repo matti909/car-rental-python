@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { useGetCarsQuery } from '../../redux/services/carsApi'
+import { useGetCarsQuery } from '../../redux/services/car.api'
 
 const cars = () => {
   const { data, isLoading, error, isFetching } = useGetCarsQuery(null)
