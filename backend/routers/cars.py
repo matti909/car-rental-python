@@ -53,7 +53,7 @@ async def list_all_cars(
         mongodb.collection.find().sort("_id", -1).skip(skip).limit(RESULTS_PER_PAGE)
     )
 
-    results = [CarDB(owner=owner, **raw_car) async for raw_car in full_query]
+    results = [CarDB(**raw_car) async for raw_car in full_query]
 
     return results
 
@@ -88,7 +88,7 @@ async def create_car_form(
 ):
     # intercept with Pillow
     original_image = Image.open(picture.file)
-    gray_image = ImageOps.posterize(original_image, 2)
+    gray_image = ImageOps.posterize(original_image, 8)
     out_image = BytesIO()
     gray_image.save(out_image, "JPEG")
     out_image.seek(0)

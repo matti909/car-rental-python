@@ -1,8 +1,9 @@
 'use client'
 import React from 'react'
 import { useGetCarsQuery } from '../../redux/services/car.api'
+import Card from '../components/card/Card'
 
-const cars = () => {
+const Cars = () => {
   const { data, isLoading, error, isFetching } = useGetCarsQuery(null)
 
   if (isLoading) return <div>Cargando...</div>
@@ -22,11 +23,17 @@ const cars = () => {
           }}
         >
           {data?.map(car => (
-            <div key={car._id}>
-              <h3>{car.brand}</h3>
-              <p>make: {car.make}</p>
-              <p>Price: {car.price}</p>
-            </div>
+            <Card
+              key={car._id}
+              brand={car.brand}
+              make={car.make}
+              year={car.year}
+              url={car.picture || ''}
+              km={car.km}
+              price={car.price}
+              cm3={car.cm3}
+              id={car._id}
+            />
           ))}
         </div>
       ) : null}
@@ -34,4 +41,4 @@ const cars = () => {
   )
 }
 
-export default cars
+export default Cars

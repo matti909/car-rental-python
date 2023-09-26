@@ -18,8 +18,9 @@ const api = createApi({
       return headers
     },
   }),
+
   endpoints: builder => ({
-    getuser: builder.query<UserData[], null>({
+    getuser: builder.query<UserData, null>({
       query: () => 'users/me',
     }),
   }),
