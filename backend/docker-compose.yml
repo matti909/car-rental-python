@@ -1,0 +1,16 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-application
+    environment:
+      - DB_URL=mongodb+srv://matti:34898525@cluster0.pdhmdrj.mongodb.net/?retryWrites=true&w=majority
+      - DB_NAME=carsApp
+      - COLLECTION_NAME=cars
+      - CLOUD_NAME=dqxd8euqj
+      - API_KEY=297946216334816
+      - API_SECRET=PGjpdmnbgVbvVD7xFrNwcLjuMQU
+    ports:
+      - "8000:8000"
+    restart: "no"
