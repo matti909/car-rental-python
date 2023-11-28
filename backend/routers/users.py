@@ -1,8 +1,10 @@
+from operator import ge
+from typing import List
 from fastapi import APIRouter, Request, Body, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from app.models import UserBase, LoginBase, CurrentUser
+from app.models import UserBase, LoginBase, CurrentUser, UserWithoutPassword
 
 from app.authentication import AuthHandler
 from app.database import mongodb
@@ -79,3 +81,12 @@ async def me(userId=Depends(auth_handler.auth_wrapper)):
     result["id"] = userId
 
     return JSONResponse(status_code=status.HTTP_200_OK, content=result)
+
+
+@router.get("/", response_description="List all users")
+async def list_all_users() -> List[CurrentUser]:
+    full_query = mongodb.db["users"].find()
+
+    results = [CurrentUser(**raw_user) async for raw_user in full_query]
+
+    return results

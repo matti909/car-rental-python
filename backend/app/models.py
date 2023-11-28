@@ -68,6 +68,11 @@ class CurrentUser(BaseModel):
     role: str = Field(...)
 
 
+class UserWithoutPassword(UserBase):
+    class Config:
+        exclude = ['password']
+
+
 class CarBase(MongoBaseModel):
     brand: str
     make: str
