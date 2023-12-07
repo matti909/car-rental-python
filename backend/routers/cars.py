@@ -63,13 +63,14 @@ async def list_all_cars(
     "/{id}", response_model=CarDB, response_description="Get a single car by ID"
 )
 async def show_car(id: str = Path(..., title="The ID of the car to get")):
-    car = await mongodb.collection.find_one({"_id": ObjectId(id)})
+    car = await mongodb.db["cars"].find_one({"_id": id})
 
     if car:
         return CarDB(**car)
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail=f"Car with ID {id} not found"
     )
+
 
 
 # create new car with FORM DATA
@@ -129,16 +130,14 @@ async def update_task(
     car: CarUpdate = Body(...),
     userId=Depends(auth_handler.auth_wrapper),
 ):
-    # check if the user trying to modify is an admin:
-    user = await mongodb.db["users"].find_one({"_id": ObjectId(id)})
-
+   
     # check if the car is owned by the user trying to modify it
-    findCar = await mongodb.db["cars"].find_one({"_id": ObjectId(id)})
+    findCar = await mongodb.db["cars"].find_one({"_id": id})
 
-    if (findCar["owner"] != userId) and user["role"] != "ADMIN":
-        raise HTTPException(
-            status_code=401, detail="Only the owner or an admin can update the car"
-        )
+    #if (findCar["owner"] != userId):
+    #    raise HTTPException(
+    #        status_code=401, detail="Only the owner or an admin can update the car"
+    #   )
 
     await mongodb.db["cars"].update_one(
         {"_id": id}, {"$set": car.dict(exclude_unset=True)}

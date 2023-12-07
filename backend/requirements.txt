@@ -12,3 +12,5 @@ python-decouple==3.8
 starlette==0.27.0
 uvicorn==0.23.2
 python-multipart==0.0.6
+numpy
+mangum
