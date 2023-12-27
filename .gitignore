@@ -1,7 +1,8 @@
 
 backend/venv/
-backend/__pycache__/
+
 backend/.space
+/__pycache__
 
 /public
 
@@ -12,4 +13,8 @@ node_modules/*
 client/node_modules/
 .next
 
+venv/
 package-lock*.json
+
+docker-compose.yml
+app/__pycache__/*

@@ -5,7 +5,6 @@ from colorama import Fore
 from app.database import mongodb
 from routers.cars import router as cars_router
 from routers.users import router as users_router
-from mangum import Mangum
 
 import uvicorn
 
@@ -27,7 +26,6 @@ middleware = [
 
 
 app = FastAPI(middleware=middleware)
-handler = Mangum(app)
 
 app.include_router(cars_router, prefix="/cars", tags=["cars"])
 app.include_router(users_router, prefix="/users", tags=["users"])
