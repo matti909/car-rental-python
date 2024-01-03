@@ -62,6 +62,14 @@ class LoginBase(BaseModel):
     password: str = Field(...)
 
 
+class RegisterBase(UserBase):  # Hereda de UserBase y agrega propiedades adicionales
+    name: str = Field(...)
+    companySize: str = Field(...)
+    companyRole: str = Field(...)
+    companyWeb: str = Field(...)
+    companyCountry: str = Field(...)
+
+
 class CurrentUser(BaseModel):
     email: str = EmailStr(...)
     username: str = Field(...)
@@ -70,7 +78,7 @@ class CurrentUser(BaseModel):
 
 class UserWithoutPassword(UserBase):
     class Config:
-        exclude = ['password']
+        exclude = ["password"]
 
 
 class CarBase(MongoBaseModel):
