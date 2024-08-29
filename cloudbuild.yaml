@@ -1,0 +1,22 @@
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/master-legacy-424811-c5/fastapi", "."]
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/master-legacy-424811-c5/fastapi"]
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "fastapi1",
+        "--image",
+        "gcr.io/master-legacy-424811-c5/fastapi",
+        "--region",
+        "us-east1",
+      ]
+images:
+  - gcr.io/master-legacy-424811-c5/fastapi
