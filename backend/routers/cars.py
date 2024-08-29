@@ -40,7 +40,7 @@ cloudinary.config(
 router = APIRouter()
 auth_handler = AuthHandler()
 
-
+# get all cars
 @router.get("/", response_description="List all cars")
 async def list_all_cars(
     owner: Optional[str] = None,
@@ -50,7 +50,11 @@ async def list_all_cars(
     skip = (page - 1) * RESULTS_PER_PAGE
 
     full_query = (
-        mongodb.collection.find().sort("_id", -1).skip(skip).limit(RESULTS_PER_PAGE)
+        mongodb.db["cars"]
+        .find()
+        .sort("_id", -1)
+        .skip(skip)
+        .limit(RESULTS_PER_PAGE)
     )
 
     results = [CarDB(**raw_car) async for raw_car in full_query]

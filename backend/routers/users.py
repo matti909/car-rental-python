@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Body, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from app.models import UserBase, LoginBase, CurrentUser, UserWithoutPassword, RegisterBase
+from app.models import UserBase, LoginBase, CurrentUser, UserWithoutPassword
 
 from app.authentication import AuthHandler
 from app.database import mongodb
@@ -20,7 +20,7 @@ auth_handler = AuthHandler()
 
 
 @router.post("/register", response_description="Register user")
-async def register(newUser: RegisterBase = Body(...)) -> JSONResponse:
+async def register(newUser: UserBase = Body(...)) -> UserBase:
     # Verifica que el correo electrónico tenga un formato válido
     if not re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", newUser.email):
         raise HTTPException(status_code=400, detail="Invalid email address")
@@ -51,7 +51,6 @@ async def register(newUser: RegisterBase = Body(...)) -> JSONResponse:
 
     user = await mongodb.db["users"].insert_one(newUser)
     created_user = await mongodb.db["users"].find_one({"_id": user.inserted_id})
-    
 
     return created_user
 
