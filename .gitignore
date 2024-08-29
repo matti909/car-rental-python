@@ -17,4 +17,4 @@ venv/
 package-lock*.json
 
 docker-compose.yml
-app/__pycache__/*
+/__pycache__/*
